@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+  - cron: "0 16 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download
+        shell: bash
+        run: |
+          
+          wget --content-disposition www.mindmotion.com.cn/getfile.aspx?id=765
+          unzip -o *.zip
+          cp -r keil_pack/* ./
+          rm -rf keil_pack
+          rm *.zip
+          
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v4.9.1
+        with:
+          push_options: '--force'
