@@ -19,11 +19,22 @@ jobs:
         shell: bash
         run: |
           
+          rm *.pack
+          
           wget --content-disposition www.mindmotion.com.cn/getfile.aspx?id=765
           unzip -o *.zip
-          cp -r keil_pack/* ./
-          rm -rf keil_pack
-          rm *.zip
+          if  ls *.pack >/dev/null 2>&1; then
+            rm *.zip
+          else
+            for dir in `ls $1`;
+            do 
+              if [ -d $dir ]; then 
+                cp -r $dir/* ./; 
+                rm -rf $dir; 
+              fi
+            done
+            rm *.zip
+          fi
           
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v4.9.1
